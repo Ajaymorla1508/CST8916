@@ -10,7 +10,7 @@ This project simulates IoT sensors at three key locations along the canal—Dow'
 
 ## System Architecture
 
-![Architecture Diagram](https://github.com/Ajaymorla1508/CST8916/blob/main/Architecture-diagram.png)
+![Architecture Diagram](https://github.com/Ajaymorla1508/CST8916/blob/main/Images/Architecture-diagram.png)
 
 ### Data Flow:
 1. Simulated IoT sensors generate and send JSON data to Azure IoT Hub.
