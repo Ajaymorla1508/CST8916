@@ -10,7 +10,7 @@ Using an end-to-end Azure data pipeline, the system collects data from simulated
 
 ## 🏗️ System Architecture
 
-![Architecture Diagram](https://github.com/Saikarthick07/Rideau-Canal-Project---Real-time-Application/blob/main/Images/ArchitectureDiagram_RideauCanal.png)
+![Architecture Diagram](https://github.com/Ajaymorla1508/CST8916/blob/main/Architecture-diagram.png)
 
 ### Key System Components:
 
