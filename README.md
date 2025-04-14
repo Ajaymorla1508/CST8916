@@ -67,7 +67,7 @@ FROM
   [IoTHubInput]
 TIMESTAMP BY timestamp
 GROUP BY
-  TumblingWindow(minute, 1), location
+  TumblingWindow(minute, 5), location
 ```
 ![Architecture Diagram](https://github.com/Ajaymorla1508/CST8916/blob/main/Images/Query.png)
 - Input: Azure IoT Hub
@@ -128,12 +128,9 @@ GROUP BY
 - Example insights:
   ```json
   {
-  {"location":"Dow's Lake","windowEnd":"2025-04-14T21:45:00.0000000Z","avgIceThickness":22.82407407407408,"maxSnowAccumulation":19.64}
-{"location":"NAC","windowEnd":"2025-04-14T21:45:00.0000000Z","avgIceThickness":24.413703703703707,"maxSnowAccumulation":19.97}
-{"location":"Fifth Avenue","windowEnd":"2025-04-14T21:45:00.0000000Z","avgIceThickness":22.637857142857143,"maxSnowAccumulation":17.98}
+    {"location":"Dow's Lake","windowEnd":"2025-04-14T21:45:00.0000000Z","avgIceThickness":22.82407407407408,"maxSnowAccumulation":19.64}
   }
   ```
-
 ---
 
 ## Reflection
