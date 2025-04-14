@@ -1,10 +1,10 @@
-# Rideau Canal Skateway Real-Time Monitoring System
+# Rideau Canal Skateway Monitoring System
 
-## 📘 Project Overview
+## 📘 Scenario Description
 
-The **Rideau Canal Skateway**, located in Ottawa, is the world's longest naturally frozen skating rink. To ensure public safety, continuous monitoring of key factors like ice thickness, temperature, and snow accumulation is essential. This project simulates IoT sensors positioned at various points along the canal to monitor real-time environmental data.
+The Rideau Canal Skateway, a UNESCO World Heritage Site and the world's longest naturally frozen skating rink, requires continuous monitoring to ensure the safety of skaters. Key environmental parameters such as ice thickness, surface temperature, snow accumulation, and external weather conditions must be assessed in real time to determine skating conditions.
 
-Using an end-to-end Azure data pipeline, the system collects data from simulated sensors, processes it in real-time, and stores it for long-term analysis. The processed data enables the **National Capital Commission (NCC)** to quickly assess and respond to potential safety concerns.
+This project simulates IoT sensors at three key locations along the canal—Dow's Lake, Fifth Avenue, and the National Arts Centre (NAC). The solution uses an end-to-end Azure-based pipeline to collect, process, and store data for further analysis by the National Capital Commission (NCC).
 
 ---
 
@@ -12,27 +12,22 @@ Using an end-to-end Azure data pipeline, the system collects data from simulated
 
 ![Architecture Diagram](https://github.com/Ajaymorla1508/CST8916/blob/main/Architecture-diagram.png)
 
-### Key System Components:
-
-1. **Simulated IoT Sensors**: These sensors generate environmental data at three locations along the canal and send it to the cloud.
-2. **Azure IoT Hub**: Collects real-time data from the simulated IoT devices.
-3. **Azure Stream Analytics**: Processes and aggregates incoming sensor data in real-time.
-4. **Azure Blob Storage**: Stores the processed data for further analysis.
+### Data Flow:
+1. Simulated IoT sensors generate and send JSON data to Azure IoT Hub.
+2. Azure IoT Hub receives the data and forwards it to Azure Stream Analytics.
+3. Azure Stream Analytics processes the data using SQL-based queries.
+4. The processed output is stored in Azure Blob Storage in JSON format.
 
 ---
 
 ## 🔧 Implementation Details
 
 ### 📡 IoT Sensor Simulation
-
-- The `RealTimeProject/sensor1.py` script simulates sensors located at:
-  - **Dow's Lake**
-  - **Fifth Avenue**
-  - **National Arts Centre (NAC)**
-
-- The script generates JSON data every **5 seconds**, which includes details such as ice thickness, temperature, snow accumulation, and timestamp. The data is sent to **Azure IoT Hub**.
-
-Example JSON payload:
+- Three Python scripts simulate sensors at:
+  - Dow's Lake
+  - Fifth Avenue
+  - NAC
+- Each script sends data every 5 seconds with the following payload structure:
 
 ```json
 {
@@ -43,3 +38,106 @@ Example JSON payload:
   "externalTemperature": -4,
   "timestamp": "2024-11-23T12:00:00Z"
 }
+```
+
+- The scripts use the Azure IoT SDK to authenticate with the IoT Hub and push telemetry.
+
+### ⚖️ Azure IoT Hub Configuration
+- An IoT Hub instance was created through the Azure portal.
+- Devices for each location were registered.
+- Primary connection strings were copied and embedded into the respective Python scripts.
+- The IoT Hub routing is configured to direct incoming telemetry to Stream Analytics.
+
+### ♻️ Azure Stream Analytics Job
+- A single job ingests data from the IoT Hub.
+- SQL query used:
+
+```sql
+SELECT
+  location,
+  AVG(iceThickness) AS avgIceThickness,
+  MAX(snowAccumulation) AS maxSnow,
+  System.Timestamp AS windowEnd
+INTO
+  [BlobStorageOutput]
+FROM
+  [IoTHubInput]
+TIMESTAMP BY timestamp
+GROUP BY
+  TumblingWindow(minute, 1), location
+```
+
+- Input: Azure IoT Hub
+- Output: Azure Blob Storage
+
+### 📁 Azure Blob Storage
+- Output container named `processed-data`
+- Data organized by date and time:
+  - `processed-data/location/yyyy/mm/dd/hh/*.json`
+- Format: JSON
+
+---
+
+## 💻 Usage Instructions
+
+### Running the IoT Sensor Simulation
+1. Clone the GitHub repository.
+2. Navigate to the sensor simulation directory.
+3. Create and activate a virtual environment:
+   ```bash
+   python3 -m venv myenv
+   source myenv/bin/activate
+   ```
+4. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+5. Run the scripts:
+   ```bash
+   python sensor_dows_lake.py
+   python sensor_fifth_avenue.py
+   python sensor_nac.py
+   ```
+
+### Configuring Azure Services
+
+#### IoT Hub:
+- Create an IoT Hub and register three devices.
+- Copy the device connection strings into the simulation scripts.
+
+#### Stream Analytics:
+- Create a job, set IoT Hub as input and Blob Storage as output.
+- Apply the provided SQL query.
+
+### Accessing Stored Data
+1. Open Azure Blob Storage.
+2. Navigate to the `processed-data` container.
+3. Browse or download the JSON files.
+
+---
+
+## 🎯 Results
+
+- Aggregated outputs like average ice thickness and maximum snow depth per minute were computed.
+- Data stored in structured JSON files per location.
+- Example insights:
+  ```json
+  {
+    "location": "Dow's Lake",
+    "avgIceThickness": 29,
+    "maxSnow": 10,
+    "windowEnd": "2024-11-23T12:01:00Z"
+  }
+  ```
+
+---
+
+## 🔄 Reflection
+
+During the implementation, key challenges included:
+- Managing separate environments for each simulated sensor.
+- Ensuring correct message routing between IoT Hub and Stream Analytics.
+- Debugging query logic and formatting for real-time processing.
+
+Through troubleshooting and iterative testing, a robust and scalable real-time monitoring pipeline was established using Azure's powerful suite of tools.
+
