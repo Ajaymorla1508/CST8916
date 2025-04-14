@@ -1,6 +1,6 @@
 # Rideau Canal Skateway Monitoring System
 
-## 📘 Scenario Description
+## Scenario Description
 
 The Rideau Canal Skateway, a UNESCO World Heritage Site and the world's longest naturally frozen skating rink, requires continuous monitoring to ensure the safety of skaters. Key environmental parameters such as ice thickness, surface temperature, snow accumulation, and external weather conditions must be assessed in real time to determine skating conditions.
 
@@ -8,7 +8,7 @@ This project simulates IoT sensors at three key locations along the canal—Dow'
 
 ---
 
-## 🏗️ System Architecture
+## System Architecture
 
 ![Architecture Diagram](https://github.com/Ajaymorla1508/CST8916/blob/main/Architecture-diagram.png)
 
@@ -20,14 +20,14 @@ This project simulates IoT sensors at three key locations along the canal—Dow'
 
 ---
 
-## 🔧 Implementation Details
+## Implementation Details
 
-### 📡 IoT Sensor Simulation
+### IoT Sensor Simulation
 - Three Python scripts simulate sensors at:
   - Dow's Lake
   - Fifth Avenue
   - NAC
-- Each script sends data every 5 seconds with the following payload structure:
+- Each script sends data every 10 seconds with the following payload structure:
 
 ```json
 {
@@ -42,13 +42,13 @@ This project simulates IoT sensors at three key locations along the canal—Dow'
 
 - The scripts use the Azure IoT SDK to authenticate with the IoT Hub and push telemetry.
 
-### ⚖️ Azure IoT Hub Configuration
+### Azure IoT Hub Configuration
 - An IoT Hub instance was created through the Azure portal.
 - Devices for each location were registered.
 - Primary connection strings were copied and embedded into the respective Python scripts.
 - The IoT Hub routing is configured to direct incoming telemetry to Stream Analytics.
 
-### ♻️ Azure Stream Analytics Job
+### Azure Stream Analytics Job
 - A single job ingests data from the IoT Hub.
 - SQL query used:
 
@@ -70,7 +70,7 @@ GROUP BY
 - Input: Azure IoT Hub
 - Output: Azure Blob Storage
 
-### 📁 Azure Blob Storage
+### Azure Blob Storage
 - Output container named `processed-data`
 - Data organized by date and time:
   - `processed-data/location/yyyy/mm/dd/hh/*.json`
@@ -78,7 +78,7 @@ GROUP BY
 
 ---
 
-## 💻 Usage Instructions
+## Usage Instructions
 
 ### Running the IoT Sensor Simulation
 1. Clone the GitHub repository.
