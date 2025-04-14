@@ -39,6 +39,7 @@ This project simulates IoT sensors at three key locations along the canal—Dow'
   "timestamp": "2024-11-23T12:00:00Z"
 }
 ```
+![Architecture Diagram](https://github.com/Ajaymorla1508/CST8916/blob/main/Images/IOT%20sensor%20outputs.png)
 
 - The scripts use the Azure IoT SDK to authenticate with the IoT Hub and push telemetry.
 
@@ -47,6 +48,8 @@ This project simulates IoT sensors at three key locations along the canal—Dow'
 - Devices for each location were registered.
 - Primary connection strings were copied and embedded into the respective Python scripts.
 - The IoT Hub routing is configured to direct incoming telemetry to Stream Analytics.
+
+
 
 ### Azure Stream Analytics Job
 - A single job ingests data from the IoT Hub.
@@ -66,10 +69,11 @@ TIMESTAMP BY timestamp
 GROUP BY
   TumblingWindow(minute, 1), location
 ```
-
+![Architecture Diagram](https://github.com/Ajaymorla1508/CST8916/blob/main/Images/Query.png)
 - Input: Azure IoT Hub
+![Architecture Diagram](https://github.com/Ajaymorla1508/CST8916/blob/main/Images/input.png)
 - Output: Azure Blob Storage
-
+![Architecture Diagram](https://github.com/Ajaymorla1508/CST8916/blob/main/Images/output.png)
 ### Azure Blob Storage
 - Output container named `processed-data`
 - Data organized by date and time:
@@ -77,6 +81,7 @@ GROUP BY
 - Format: JSON
 
 ---
+![Architecture Diagram](https://github.com/Ajaymorla1508/CST8916/blob/main/Images/output2.png)
 
 ## Usage Instructions
 
@@ -118,21 +123,20 @@ GROUP BY
 
 ## 🎯 Results
 
-- Aggregated outputs like average ice thickness and maximum snow depth per minute were computed.
+- Aggregated outputs like average ice thickness and maximum snow depth for every 5 minutes were computed.
 - Data stored in structured JSON files per location.
 - Example insights:
   ```json
   {
-    "location": "Dow's Lake",
-    "avgIceThickness": 29,
-    "maxSnow": 10,
-    "windowEnd": "2024-11-23T12:01:00Z"
+  {"location":"Dow's Lake","windowEnd":"2025-04-14T21:45:00.0000000Z","avgIceThickness":22.82407407407408,"maxSnowAccumulation":19.64}
+{"location":"NAC","windowEnd":"2025-04-14T21:45:00.0000000Z","avgIceThickness":24.413703703703707,"maxSnowAccumulation":19.97}
+{"location":"Fifth Avenue","windowEnd":"2025-04-14T21:45:00.0000000Z","avgIceThickness":22.637857142857143,"maxSnowAccumulation":17.98}
   }
   ```
 
 ---
 
-## 🔄 Reflection
+## Reflection
 
 During the implementation, key challenges included:
 - Managing separate environments for each simulated sensor.
